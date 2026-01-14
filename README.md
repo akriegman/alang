@@ -24,7 +24,7 @@ Rust gives us access to all these tools, but only in specific combinations:
 - Tuples are (1)
 - `struct`s are (2) plus (6)
 - Arrays are (3)
-- `usize` is (4) arguably. Panicing on a failed bounds check is like saying `idx` lives in the anonymous enum with `len` variants.
+- `usize` is (4) arguably. Panicking on a failed bounds check is like saying `idx` lives in the anonymous enum with `len` variants.
 - `enum`s are (5), (6), (1), and (2) all in one
 - `type` is (6)
 
@@ -53,6 +53,23 @@ A does not have the standard C-like operators `+, -, *,` etc. Instead you must u
 `>-...->` is used for closures and functions. So `>->` is the identity function, `x->->` passes `x` to the identity function, `>->-y` passes the identity function to `y`, and `x->->-y` is `y(nop(x))`.
 > How should we write `f(x)(y)`? So far we can only call closures or functions that are bound to identifiers. This question might be answered once we decide how to piece expressions together into programs.
 
+Since anonymous product types are indexed by anonymous sum types and named product types are indexed by named sum types, we can use the same notation for dynamic indexing as dynamic lensing. We will have static indexes/lenses only for bracket stacks, but for single brackets we will allow an index/lens to be chosen dynamically through a wire to the top or bottom of the bracket. Some examples:
+```
+      2}-+  /* dynamic index */
+         |
+'a']  +--[--)--eq
+'b']--+     |
+'c']  +--[2-)  /* static index */
+
+             age}--+
+     20--age)      |
+"alice"-name)--+---(-------
+               |
+               +---(name---
+```
+
+Note that indexing a tuple with the anonymous enum can return a different type depending on the variant. Rust type semantics would not allow for this if indexing is a function taking a `usize`. So this is a substantial difference between `usize` and the anonymous enum.
+
 `!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable.
 
 `*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
@@ -66,7 +83,7 @@ alice---(age---)add---age)--=alice
 
 Variables are set, and in general things are named, using `=`. So a function is declared like `>--...-->---=foo`.
 
-`:` is used for type assertions. Functions can have multiple `>` return points. Any of the return points can be used to refer to the whole function.
+`:` is used for type judgements. Functions can have multiple `>` return points. Any of the return points can be used to refer to the whole function.
 ```
 bool:
     |
@@ -88,13 +105,13 @@ bool:
 
 Notice that this destructing sum type syntax is way more versatile than what rust provides, where you have to use `if`, `if let`, `let ... else`, `match`, `?`, or any number of `.ok_or()` "convenience" functions depending on the situation. (Sorry I don't mean to snarky. I love Rust! But having to check the documentation just to keep variant handling concise sucks.) For example, `?` becomes
 ```
-...-{Ok----...
-    {*->
+...--{Ok---...
+     {*->
 ```
 Or something.
 
-We may make `=` without an identifier be a tunnel, like `-=  other_stuff  =-`. This is similar to the other usage of `=` because a tunnel is like an anonymous identifier.
+We may make `=` without an identifier be a tunnel, like `-=  other_stuff  =-`. This is similar to the other usage of `=` because a tunnel is like an anonymous identifier. We could just have this instead of `%`. And then we could use `%` for this instead. Hmm...
 
 ## Tooling
 
-We will have a Zed extension for editing A files. We'll try having the extension squash fonts into squares, but more likely we'll create our own square font. The extension will allow rectangular selections. It will have hotkeys for inserting a column or row, automatically extending any wires and sliding over any identifiers this would cut. It will also allow you to treat the buffer as a canvas extending infinitely down and to the right, automatically filling in spaces to the left and trimming spaces to the right. I guess we'll have a formatter, but god knows how that's gonna work.
+We will have a Zed extension for editing A files. We'll try having the extension squash fonts into squares, but more likely we'll create our own square font. The extension will allow rectangular selections. It will have hotkeys for inserting a column or row, automatically extending any wires and sliding over any identifiers this would cut. It will also allow you to treat the buffer as a canvas extending infinitely down and to the right, automatically filling in spaces to the left and trimming spaces to the right. It will also provide a method for laying long wires, either by click and dragging or clicking twice, showing a ghost of the wire it will make until you commit or cancel. I guess we'll have a formatter, but god knows how that's gonna work.
