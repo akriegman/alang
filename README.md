@@ -53,7 +53,7 @@ A does not have the standard C-like operators `+, -, *,` etc. Instead you must u
 `>-...->` is used for closures and functions. So `>->` is the identity function, `x->->` passes `x` to the identity function, `>->-y` passes the identity function to `y`, and `x->->-y` is `y(nop(x))`.
 > How should we write `f(x)(y)`? So far we can only call closures or functions that are bound to identifiers. This question might be answered once we decide how to piece expressions together into programs.
 
-`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` and `{!` can be tacked on to a sum type constructor / destructor with no effect. `*)` is used to splat a value into a product type constructor, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `*}` is meaningless. So a single field of a struct can be updated like this:
+`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` and `{!` can be tacked on to a sum type constructor / destructor with no effect. `*)` is used to splat a value into a product type constructor, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `*}` is used in situation where a wire carries multiple variants, TBD how that will work. So a single field of a struct can be updated like this:
 ```
 alice---(age---)add---age)--=alice
         |   1--)         | 
@@ -64,13 +64,13 @@ alice---(age---)add---age)--=alice
 
 Variables are set, and in general things are named, using `=`. So a function is declared like `>--...-->---=foo`.
 
-`:` is used for type assertions. Functions can have multiple return points with `>`. These return points can be tied together or separately assigned to the same identifier.
+`:` is used for type assertions. Functions can have multiple return points with `>`. Any of the return points can be used to refer to the whole function.
 ```
 bool:
-    |                               /* or alternatively: */
->---+--{false--"hello"--->-+        /*  ...->--=foo      */
-       |                   |        /*                   */
-       {true---"world"-+->-+-=foo   /*  ...->--=foo      */
+    |
+>---+--{false--"hello"--->
+       |
+       {true---"world"-+->--=foo
                        |
                    str&:
 ```
@@ -83,6 +83,13 @@ bool:
 > So maybe we want to calling literals to be syntax sugar for this? idk man...
 
 > For functions we should probably attach the `:` directly to the `>` actually...
+
+Notice that this destructing sum type syntax is way more versatile than what rust provides, where you have to use `if`, `if let`, `let ... else`, `match`, `?`, or any number of `.ok_or()` "convenience" functions depending on the situation. (Sorry I don't mean to snarky. I love Rust! But having to check the documentation just to keep variant handling concise sucks.) For example, `?` becomes
+```
+...-{Ok----...
+    {Err->
+```
+Or something.
 
 ## Tooling
 
