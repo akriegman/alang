@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function pub {
+  jj b m main
+  jj commit -m "${1:-no msg}"
+  jj git push
+}
