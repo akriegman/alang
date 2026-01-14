@@ -53,11 +53,13 @@ A does not have the standard C-like operators `+, -, *,` etc. Instead you must u
 `>-...->` is used for closures and functions. So `>->` is the identity function, `x->->` passes `x` to the identity function, `>->-y` passes the identity function to `y`, and `x->->-y` is `y(nop(x))`.
 > How should we write `f(x)(y)`? So far we can only call closures or functions that are bound to identifiers. This question might be answered once we decide how to piece expressions together into programs.
 
-`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable. `*)` is used to splat a value into a product type constructor, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `*}` is used in situation where a wire carries multiple variants, TBD how that will work. So a single field of a struct can be updated like this:
+`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable.
+
+`*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `*}` is used in situations where a wire carries multiple variants, TBD how that will work. So a single field of a struct can be updated like this:
 ```
 alice---(age---)add---age)--=alice
         |   1--)         | 
-        (*--------------*) 
+        (*--------------*)
 ```
 `(*` can only take a suffix of a tuple.
 > Should we allow types to mix anonymous and named fields? I don't see why not.
@@ -90,6 +92,8 @@ Notice that this destructing sum type syntax is way more versatile than what rus
     {Err->
 ```
 Or something.
+
+We may make `=` without an identifier be a tunnel, like `-=  other_stuff  =-`. This is similar to the other usage of `=` because a tunnel is like an anonymous identifier.
 
 ## Tooling
 
