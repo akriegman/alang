@@ -12,12 +12,12 @@ An expression in A is connected together by wires that carry values. The wires a
 
 Typically, a programming language lets you define types using some combinations of some subset of these tools:
 
-a) product types with anonymous members
-b) product types with named members
-c) homogenous product types
-d) sum types with anonymous variants
-e) sum types with named variants
-f) naming a type
+- a) product types with anonymous members
+- b) product types with named members
+- c) homogenous product types
+- d) sum types with anonymous variants
+- e) sum types with named variants
+- f) naming a type
 
 Rust gives us access to all these tools, but only in specific combinations:
 
@@ -48,7 +48,7 @@ Here both calls to `eq` return `true`.
 In A, all functions take one argument and return one argument. Rust functions, which take multiple arguments identified by their position, are wrapped in an A function that accepts a tuple. Likewise, A functions have auto generated Rust wrappers that accept a single argument. An A function that accepts a product type can be given an annotation to make the Rust wrapper accept the members as separate arguments.
 > Should we make single arg Rust functions take a singleton tuple or the arg directly? Or should we have no distinction, so `(x,) == x`?
 
-A does not have the standard ascii operators +, -, *, etc. Instead you must use the functions add, sub, neg, mul, etc. A uses the same syntax as Rust for literals, except that there are no negative number literals. Instead you must negate them with neg, like `1-neg`.
+A does not have the standard ascii operators `+, -, *,` etc. Instead you must use the functions `add, sub, neg, mul,` etc. A uses the same syntax as Rust for literals, except that there are no negative number literals. Instead you must negate them with neg, like `1-neg`.
 
 `>-...->` is used for closures and functions. So `>->` is the identity function, `x->->` passes `x` to the identity function, `>->-y` passes the identity function to the function `y`, and `x->->-y` is `y(nop(x))`.
 > How should we write `f(x)(y)`? So far we can only call functions that are bound to identifiers, or closures. This question might be answered once we decide how to piece expressions together into programs.
@@ -74,4 +74,11 @@ bool:
                        |
                    str&:
 ```
+> Here we're basically calling a string literal on the unit type. More correct would probably be
+```
+{false--!)
+"hello"--)
+```
+> So maybe we want to call literals as syntax sugar for this? idk man...
+
 > For functions we should probably attach the `:` directly to the `>` actually...
