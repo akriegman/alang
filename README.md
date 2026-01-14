@@ -55,18 +55,18 @@ A does not have the standard C-like operators `+, -, *,` etc. Instead you must u
 
 `!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable.
 
-`*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `*}` is used in situations where a wire carries multiple variants, TBD how that will work. So a single field of a struct can be updated like this:
+`*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
 ```
 alice---(age---)add---age)--=alice
         |   1--)         | 
         (*--------------*)
 ```
 `(*` can only take a suffix of a tuple.
-> Should we allow types to mix anonymous and named fields? I don't see why not.
+> Should we allow types to mix anonymous and named fields? I don't see why not...
 
 Variables are set, and in general things are named, using `=`. So a function is declared like `>--...-->---=foo`.
 
-`:` is used for type assertions. Functions can have multiple return points with `>`. Any of the return points can be used to refer to the whole function.
+`:` is used for type assertions. Functions can have multiple `>` return points. Any of the return points can be used to refer to the whole function.
 ```
 bool:
     |
@@ -82,14 +82,14 @@ bool:
 | "hello"--)
 ...
 ```
-> So maybe we want to calling literals to be syntax sugar for this? idk man...
+> So maybe we want calling literals to be syntax sugar for this? idk man...
 
 > For functions we should probably attach the `:` directly to the `>` actually...
 
 Notice that this destructing sum type syntax is way more versatile than what rust provides, where you have to use `if`, `if let`, `let ... else`, `match`, `?`, or any number of `.ok_or()` "convenience" functions depending on the situation. (Sorry I don't mean to snarky. I love Rust! But having to check the documentation just to keep variant handling concise sucks.) For example, `?` becomes
 ```
 ...-{Ok----...
-    {Err->
+    {*->
 ```
 Or something.
 
