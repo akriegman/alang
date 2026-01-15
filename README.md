@@ -33,15 +33,13 @@ In A we perform a change of basis in abstraction space and give you the more fun
 
 > Note that there is no homogenous sum type as that would factor.
 
-Product types are constructed with a stack of `)`s and destructed/accessed with `(`s. Sum types are constructed with `}`s and destructed/matched with `{`s. Homogenous types are constructed with `]` and destructed/indexed with `[`. These stacks can have any number of `|`s mixed in. Destructing sum types is the primary (and maybe only, tbd) tool for control flow. Anonymous members/variants can be specified using position or number literals, and named members with the identifier. So for example:
+Product types are constructed with a stack of `)`s and destructed/accessed with `(`s. Sum types are constructed with `}`s and destructed/matched with `{`s. Homogenous types are constructed with `]` and destructed/indexed with `[`. These stacks can have any number of `|`s mixed in. Destructing sum types is the primary (and maybe only, tbd) tool for control flow. Anonymous members/variants can be specified using position, and named members with the identifier. So for example:
 ```
-      'a'---)
-            |
-       [----)---eq
+         'a')
+       [----)eq
 'a']   |
-'b']---[2---)---eq
-'c']        |
-      'c'---)
+'b']---[----)eq
+'c']     'b')
 ```
 Here both calls to `eq` return `true`.
 
@@ -53,31 +51,26 @@ A does not have the standard C-like operators `+, -, *,` etc. Instead you must u
 `>-...->` is used for closures and functions. So `>->` is the identity function, `x->->` passes `x` to the identity function, `>->-y` passes the identity function to `y`, and `x->->-y` is `y(nop(x))`.
 > How should we write `f(x)(y)`? So far we can only call closures or functions that are bound to identifiers. This question might be answered once we decide how to piece expressions together into programs.
 
-Since anonymous product types are indexed by anonymous sum types and named product types are indexed by named sum types, we could use the same notation for dynamic indexing as dynamic lensing. We could have static indexes/lenses only for bracket stacks, but for single brackets allow an index/lens to be chosen dynamically through a wire to the top or bottom of the bracket. Some examples:
-```
-      2}-+  /* dynamic index */
-         |
-'a']  +--[--)--eq
-'b']--+     |
-'c']  +--[2-)  /* static index */
-
-             age}--+
-     20--age)      |
-"alice"-name)--+---(-------
-               |
-               +---(name---
-```
-
-However, we should probably just not have special syntax for dynamic indexing/lensing, and instead just use the `index` and `get` methods.
+Since anonymous product types are indexed by anonymous sum types and named product types are indexed by named sum types, we could use the same notation for dynamic indexing as dynamic lensing. We could have static indexes/lenses only for bracket stacks, but for single brackets allow an index/lens to be chosen dynamically through a wire to the top or bottom of the bracket. However, we should probably not have special syntax for dynamic indexing/lensing, and instead just use the `index` and `get` methods.
 
 Note that indexing a tuple with the anonymous enum can return a different type depending on the variant. Rust type semantics would not allow for this if indexing is a function taking a `usize`. So this is a substantial difference between `usize` and the anonymous enum.
 
-`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable.
+`!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable. So for example we can do an assertion:
+```
+        {false-!}
+1)add)eq{true-----...
+1)  2)
+```
+Or, we could have `bool` be the anonymous enum with two variants, and discard the `true` arm if we just want to make the assertion and continue execution elsewhere:
+```
+1)add)eq{-!}
+1)  2)
+```
 
 `*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
 ```
 alice---(age---)add---age)--=alice
-        |   1--)         | 
+        |     1)         | 
         (*--------------*)
 ```
 `(*` can only take a suffix of a tuple.
@@ -98,7 +91,7 @@ bool:
 > Here we're basically calling a string literal on the unit type. More correct would probably be
 ```
 {false----!)(---
-| "hello"--)
+|   "hello")
 ...
 ```
 > So maybe we want calling values to be syntax sugar for this? idk man...
@@ -134,6 +127,6 @@ mod=
 
 ## Tooling
 
-We will have a Zed extension for editing A files. We'll try having the extension squash fonts into squares, but more likely we'll create our own square font. The extension will allow rectangular selections. It will make enter and tab insert a row or column, automatically extending any wires and sliding over any identifiers this would cut. It will also allow you to treat the buffer as a canvas extending infinitely down and to the right, automatically filling in spaces to the left and trimming spaces to the right. It will also provide a method for laying long wires, either by clicking and dragging or clicking twice, showing a ghost of the wire it will make until you commit or cancel. I guess we'll have a formatter, but god knows how that's gonna work.
+We will have a Zed extension for editing A files. We may have the extension squash fonts into squares or create our own square font, but more likely we'll just have it display `+-|` as the box drawing characters `┼─│`. The extension will allow rectangular selections, and dragging selections to any position. It will make enter and tab insert a row or column, automatically extending any wires and sliding over any identifiers this would cut. It will also allow you to treat the buffer as a canvas extending infinitely down and to the right, automatically filling in spaces to the left and trimming spaces to the right. It will also provide a method for laying long wires, either by clicking and dragging or clicking twice, showing a ghost of the wire it will make until you commit or cancel. I guess we'll have a formatter, but god knows how that's gonna work.
 
 There's two main approaches to compiling A: emit one of Rust's IRs, or transpile to Rust. The former will give us more power to iterate on Rust's type system and allow us to produce better error messages. The latter will allow us to publish to crates.io and use Rust macros. We will probably want both.
