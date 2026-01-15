@@ -68,7 +68,7 @@ Or, we could have `bool` be the anonymous enum with two variants, and discard th
 1)   2)
 ```
 > Here we have `false` as the first variant and `true` as the second, but we may want to switch them. That would match our intuition from `if ... else`, `? :`, "true or false", etc. It would not match the representation in bits or C-style truthiness however.
-> If we think that `else` clauses are usually shorter than `if` clauses though, the having `false` first could be good for having both branches start close to the conditional.
+> If we think that `else` clauses are usually shorter than `if` clauses though, then having `false` first could be good for having both branches start close to the conditional.
 
 `*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
 ```
@@ -76,7 +76,7 @@ alice---(age---)add---age)--=alice
         |     1)         | 
         (*--------------*)
 ```
-`(*` can only take a suffix of a tuple.
+For tuples, `(*` can only take a suffix. Same for any anonymous members/variants type.
 > Should we allow types to mix anonymous and named fields? I don't see why not...
 
 Variables are set, and in general things are named, using `=`. So a function is declared like `>--...-->---=foo`.
@@ -126,6 +126,25 @@ mod=
         (wasm_bindgen-"0.2.106"
         (wasm_bindgen_futures-"0.4.56"
 ```
+
+## Time
+
+So far we've only described the syntax for expressions. Now we will discuss how to do loops, and general execute statements in sequence.
+
+You can make a loop in A with a literal loop:
+```
+ 0)   +--+
+>-)..-+)(+
+ +-----) +-next{none-
+ | 0}          {some-!)
+ +--}?----------------)
+ |                    |
+ +---+                |
+   1}?----------------)add+
+ +--}                     |
+ +------------------------+
+```
+Here `..` is the Rust range operator, and `?` is the phi operator, which factors a homogenous sum type. We may also keep `?` as the early return operator from Rust, and these two uses may be two versions of the same thing, since both serve to unwrap an enum.
 
 ## Tooling
 

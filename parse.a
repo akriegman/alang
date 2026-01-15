@@ -1,0 +1,36 @@
+
+Val={reg-usize
+
+Inst={
+enum Inst {
+    Mv(Val, Val),
+    Add(Val, Val),
+}
+
+pub struct Processor {
+    register_names: Vec<String>,
+    program: Vec<Inst<usize>>,
+}
+
+
+ (self-&mut-Processor
+:(asm-&str
+|
+>-(self=     +--+
+  (asm--lines+)(+next{none-ok}>-=parse
+     continue-)      {some-split_whitespace-mut=words
+
+  self(register_names-iter-)position{some--Val::reg}--ok}>-=parse_val
+                  >-)eq->--)        {none--!)#format-err}
+                   +) "{} is not a register")
+  >-words-next{some+------------------------)
+              {none----------!)#format-err}>
+  "{} expects another operand")
+                  +-----------)
+                  |
+  words-next{none-%-=continue        self(program-)push-=continue
+            {some-+{"mv"-+parse_val?;)--Inst::mv}-)
+                   |     $parse_val?-)          |
+                   |                            |
+                   {"add"+parse_val?;)-Inst::add}
+                         $parse_val?-)
