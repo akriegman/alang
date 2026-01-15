@@ -67,6 +67,8 @@ Or, we could have `bool` be the anonymous enum with two variants, and discard th
 1)add-)eq{-!}
 1)   2)
 ```
+> Here we have `false` as the first variant and `true` as the second, but we may want to switch them. That would match our intuition from `if ... else`, `? :`, "true or false", etc. It would not match the representation in bits or C-style truthiness however.
+> If we think that `else` clauses are usually shorter than `if` clauses though, the having `false` first could be good for having both branches start close to the conditional.
 
 `*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
 ```
@@ -101,10 +103,9 @@ bool:
 
 Notice that this destructing sum type syntax is way more versatile than what rust provides, where you have to use `if`, `if let`, `let ... else`, `match`, `?`, or any number of `.ok_or()` "convenience" functions depending on the situation. (Sorry I don't mean to snarky. I love Rust! But having to check the documentation just to keep variant handling concise sucks.) For example, `?` becomes
 ```
-...--{Ok---...
-     {*->
+...--{Ok--...
+     {*>
 ```
-Or something.
 
 We may make `=` without an identifier be a tunnel, like `-=  other_stuff  =-`. This is similar to the other usage of `=` because a tunnel is like an anonymous identifier. We could just have this instead of `%`. And then we could use `%` for this instead. Hmm...
 
