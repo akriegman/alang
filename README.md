@@ -1,8 +1,9 @@
+# A
 A is a 2D imperative programming language. It is a frontend for the Rust compiler, so A can do everything Rust can do. A is not a toy, it aims to be your new desert island language. I am speaking in the present tense even though A does not exist yet. This is just a design document.
 
 ## Why 2D?
 
-Languages (human languages, math, code) encode digraphs into 1D streams of information. There is no good way to do this in general (see [my blog post](https://aaah.run/struck)). Going up a dimension solves this.
+Languages (human languages, math, code) encode trees into 1D streams of information. There is no good way to do this in general, and going up a dimension solves this. In fact, two dimensions is enough for us to encode digraphs instead of just trees, which is what languages should be doing anyways, but they don't because encoding trees is already hard enough in 1D. See my [blog post](https://aaah.run/struck) on this.
 
 I don't know about you, but when I read code I essentially translate it into a diagram in my head. Writing the code as a diagram in the first place takes the cognitive load off of the reader.
 
