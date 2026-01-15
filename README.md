@@ -57,14 +57,14 @@ Note that indexing a tuple with the anonymous enum can return a different type d
 
 `!` can be used to refer to no member/variant. So the unit type's value can be written `!)`, so a nullary function can be called like `!)start`. A value can be dropped while keeping its wire around for control flow purposes using `-(!-`. `!}` can be used to panic. `{!` is unreachable. So for example we can do an assertion:
 ```
-        {false-!}
-1)add)eq{true-----...
-1)  2)
+         {false-!}
+1)add-)eq{true-----...
+1)   2)
 ```
 Or, we could have `bool` be the anonymous enum with two variants, and discard the `true` arm if we just want to make the assertion and continue execution elsewhere:
 ```
-1)add)eq{-!}
-1)  2)
+1)add-)eq{-!}
+1)   2)
 ```
 
 `*)` is used to splat a value into the remaining fields, `(*` to take the remaining fields in a new smaller product type, and `{*` as a wildcard when matching. `(*` and `{*` both create a new type with fewer members/variants. `*}` can be used to merge such a sub-enum value back into the larger enum. So a single field of a struct can be updated like this:
@@ -107,7 +107,7 @@ Or something.
 
 We may make `=` without an identifier be a tunnel, like `-=  other_stuff  =-`. This is similar to the other usage of `=` because a tunnel is like an anonymous identifier. We could just have this instead of `%`. And then we could use `%` for this instead. Hmm...
 
-We may allow the program to flow both ways, so that `)` and `(` can both be used for constructing and destructing depending on context, etc. We would have the program flow towards terminals such as `=`, `->`, and `<-`, and away from `>-` and `-<`. Some cases where this would feel more natural are type expressions and the top scope of a file:
+We may allow the program to flow both ways, so that `)` and `(` can both be used for constructing and destructing depending on context, and same for `][}{`. We would have the program flow towards terminals such as `=`, `->`, and `<-`, and away from `>-` and `-<`. Some cases where this would feel more natural are type expressions and the top scope of a file:
 ```
 mod=
    +(package
