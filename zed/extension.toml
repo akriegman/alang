@@ -5,3 +5,8 @@ schema_version = 1
 authors = ["Aaron Kriegman <aaronkplus2@gmail.com>"]
 description = "Support for the A programming language"
 repository = "https://github.com/akriegman/alang"
+
+[grammars.a]
+repository = "https://github.com/akriegman/alang"
+rev = "f43c6be3ff9887a6a89382bb003c7e3dcaec3307"
+path = "tree-sitter"
