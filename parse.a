@@ -1,17 +1,17 @@
 
-Val={reg-usize
+=Val
++---{reg-usize
 
-Inst={
-enum Inst {
-    Mv(Val, Val),
-    Add(Val, Val),
-}
+=Inst
++---{mv-(-Val
+    |   (-Val
+    |
+    {add(-Val
+        (-Val
 
-pub struct Processor {
-    register_names: Vec<String>,
-    program: Vec<Inst<usize>>,
-}
-
+=Processor
++---(register_names-Vec-String
+    (program-Vec-Inst
 
  (self-&mut-Processor
 :(asm-&str

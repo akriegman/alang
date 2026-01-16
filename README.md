@@ -129,22 +129,18 @@ mod=
 
 ## Time
 
-So far we've only described the syntax for expressions. Now we will discuss how to do loops, and general execute statements in sequence.
+So far we've only described the syntax for expressions. Now we will discuss how to do loops, and general execute statements in sequence. First, here's how to write a classic javascript-style `for (int i = 0; i < n; i++)` loop:
+```
+0-=i
 
-You can make a loop in A with a literal loop:
+i+-)lt{
+ +n)  {+"{i}")#println
+       +)add-=i
+       1)
 ```
- 0)   +--+
->-)..-+)(+
- +-----) +-next{none-
- | 0}          {some-!)
- +--}?----------------)
- |                    |
- +---+                |
-   1}?----------------)add+
- +--}                     |
- +------------------------+
-```
-Here `..` is the Rust range operator, and `?` is the phi operator, which factors a homogenous sum type. We may also keep `?` as the early return operator from Rust, and these two uses may be two versions of the same thing, since both serve to unwrap an enum.
+This needs some work to be honest. We're using wires for both values and control flow, which becomes weird when we just need the control flow. We've been using calling a non-function as shorthand for pushing that value into it's wire, but this seems like maybe the wrong approach...
+
+Note that A has a lot in common with LLVM-IR. Each wire is basically an SSA value. A wire with multiple inputs is a phi node. We may make `?` the explicit phi operator, both since it looks like a phi, and bc phi effectively unwraps an enum, similar to the Rust usage of `?`.
 
 ## Tooling
 

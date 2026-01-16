@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function run {
+  python3 -c '
+import sys
+from fontTools.ttLib import TTFont
+from fontTools.feaLib.builder import addOpenTypeFeatures
+
+f = TTFont(sys.argv[1])
+
+addOpenTypeFeatures(f, "sub.fea")
+
+name = f["name"]
+def set_name(nameID, s):
+    for r in name.names:
+        if r.nameID == nameID:
+            r.string = s.encode(r.getEncoding(), "replace")
+
+family = "A Mono"
+subfam = "Regular"
+full  = f"{family} {subfam}"
+ps    = family.replace(" ", "") + "-" + subfam.replace(" ", "")
+set_name(1, family)
+set_name(2, subfam)
+set_name(4, full)
+set_name(6, ps)
+
+f.save(sys.argv[2])
+  ' GoMonoRegular.ttf AMono.ttf
+}

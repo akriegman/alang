@@ -1,0 +1,7 @@
+id = "alang"
+name = "A"
+version = "0.0.1"
+schema_version = 1
+authors = ["Aaron Kriegman <aaronkplus2@gmail.com>"]
+description = "Support for the A programming language"
+repository = "https://github.com/akriegman/alang"

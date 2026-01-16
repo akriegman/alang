@@ -1,0 +1,5 @@
+feature calt {
+  sub plus   by SF050000;
+  sub hyphen by SF100000;
+  sub bar    by SF110000;
+} calt;
